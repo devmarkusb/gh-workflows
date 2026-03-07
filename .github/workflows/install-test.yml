@@ -26,6 +26,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
     - name: Configure CMake (Library)
       run:  |
         mkdir -p build/.cmake/api/v1/query

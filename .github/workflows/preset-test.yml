@@ -19,6 +19,8 @@ jobs:
     container: ${{ matrix.presets.image }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
       - name: Setup build environment
         if: matrix.presets.runner
         uses: lukka/get-cmake@latest
