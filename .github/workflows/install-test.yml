@@ -32,7 +32,7 @@ jobs:
       run:  |
         mkdir -p build/.cmake/api/v1/query
         touch build/.cmake/api/v1/query/codemodel-v2
-        cmake -B build -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=./devenv/cmake/fetch-content-from-lockfile.cmake -DCMAKE_CXX_STANDARD=${{ inputs.cxx_standard }} -DCMAKE_INSTALL_PREFIX=$PWD/dist
+        cmake -B build -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=./devenv/cmake/fetch-content-from-lockfile.cmake -DCMAKE_CXX_STANDARD=${{ inputs.cxx_standard }} -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist
 
     - name: Get Library Name
       id: get-lib-name
