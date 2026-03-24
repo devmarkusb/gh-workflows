@@ -121,7 +121,7 @@ jobs:
             MaxWarn)
               echo "cmake_extra_args=-DCMAKE_CXX_FLAGS='-Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wformat=2 -Werror'" >> "$GITHUB_OUTPUT" ;;
             MaxWarnMsvc)
-              echo "cmake_extra_args=-DCMAKE_CXX_FLAGS='/W4 /WX /permissive-'" >> "$GITHUB_OUTPUT" ;;
+              echo "cmake_extra_args=-DCMAKE_CXX_FLAGS='-W4 -WX -permissive-'" >> "$GITHUB_OUTPUT" ;;
             Dynamic)
               echo "cmake_extra_args=-DBUILD_SHARED_LIBS=on" >> "$GITHUB_OUTPUT" ;;
             Coverage)
