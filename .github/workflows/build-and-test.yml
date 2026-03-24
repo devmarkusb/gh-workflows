@@ -113,11 +113,11 @@ jobs:
           case $test_type in
             Default) ;;
             TSan)
-              echo "cmake_extra_args=-DMB_SANITIZER=TSan" >> "$GITHUB_OUTPUT" ;;
+              echo "cmake_extra_args=-DMB_DEVENV_SANITIZER=TSan" >> "$GITHUB_OUTPUT" ;;
             MSan)
-              echo "cmake_extra_args=-DMB_SANITIZER=MSan" >> "$GITHUB_OUTPUT" ;;
+              echo "cmake_extra_args=-DMB_DEVENV_SANITIZER=MSan" >> "$GITHUB_OUTPUT" ;;
             MaxSan)
-              echo "cmake_extra_args=-DMB_SANITIZER=MaxSan" >> "$GITHUB_OUTPUT" ;;
+              echo "cmake_extra_args=-DMB_DEVENV_SANITIZER=MaxSan" >> "$GITHUB_OUTPUT" ;;
             MaxWarn)
               echo "cmake_extra_args=-DCMAKE_CXX_FLAGS='-Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wformat=2 -Werror'" >> "$GITHUB_OUTPUT" ;;
             MaxWarnMsvc)
