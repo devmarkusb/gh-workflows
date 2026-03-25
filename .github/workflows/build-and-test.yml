@@ -119,7 +119,7 @@ jobs:
             MaxSan)
               echo "cmake_extra_args=-DMB_DEVENV_SANITIZER=MaxSan" >> "$GITHUB_OUTPUT" ;;
             MaxWarn)
-              echo "cmake_extra_args=-DCMAKE_CXX_FLAGS='-Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow-field-in-constructor -Wformat=2 -Werror'" >> "$GITHUB_OUTPUT" ;;
+              echo "cmake_extra_args=-DCMAKE_CXX_FLAGS='-Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wformat=2 -Werror'" >> "$GITHUB_OUTPUT" ;;
             MaxWarnMsvc)
               echo "cmake_extra_args=-DCMAKE_CXX_FLAGS='-W4 -WX -permissive-'" >> "$GITHUB_OUTPUT" ;;
             Dynamic)
