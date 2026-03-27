@@ -14,6 +14,10 @@ on:
       namespace:
         type: string
         required: true
+      include_header:
+        description: 'Full header include path for the consumer test'
+        type: string
+        required: false
       main_header:
         description: 'Name of the main header of the project'
         type: string
@@ -60,13 +64,17 @@ jobs:
         target_link_libraries(app PRIVATE ${{ inputs.namespace }}::${{ steps.get-lib-name.outputs.name }})
         EOF
 
-        main_header=${{ inputs.main_header }}
-        if [[ -z "$main_header" ]] ; then
-          main_header="${{ steps.get-lib-name.outputs.name }}.hpp"
+        include_header=${{ inputs.include_header }}
+        if [[ -z "$include_header" ]] ; then
+          main_header=${{ inputs.main_header }}
+          if [[ -z "$main_header" ]] ; then
+            main_header="${{ steps.get-lib-name.outputs.name }}.hpp"
+          fi
+          include_header="${{ inputs.namespace }}/${{ steps.get-lib-name.outputs.name }}/${main_header}"
         fi
 
         cat <<EOF > main.cpp
-        #include "${{ inputs.namespace }}/${{ steps.get-lib-name.outputs.name }}/${main_header}"
+        #include "${include_header}"
 
         int main() {
             return 0;
