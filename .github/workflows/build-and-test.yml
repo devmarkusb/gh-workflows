@@ -176,7 +176,7 @@ jobs:
           coveralls-pretty = yes
           merge-mode-functions = separate
           EOF
-          git config --global --add safe.directory $GITHUB_WORKSPACE
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
           gcovr --verbose --config gcovr.cfg .
           cat coverage.json
       - name: Upload Coverage Data to Coveralls

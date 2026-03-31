@@ -40,7 +40,7 @@ jobs:
         run: |
           extra=""
           if [ "${{ steps.apply_hooks.outcome }}" = "failure" ]; then
-            extra="$(printf '\n\n**Warning:** `pre-commit run --all-files` failed after autoupdate. Expect follow-up fixes in this branch before CI passes.')"
+            extra="$(printf "\n\n**Warning:** \`pre-commit run --all-files\` failed after autoupdate. Expect follow-up fixes in this branch before CI passes.")"
             echo "### \`pre-commit run --all-files\` failed after autoupdate" >> "$GITHUB_STEP_SUMMARY"
             echo "See the PR body warning; update hook configs or fix findings locally." >> "$GITHUB_STEP_SUMMARY"
           fi
