@@ -12,6 +12,7 @@ on:
         type: string
         required: true
       namespace:
+        description: 'CMake namespace / package ID prefix (e.g. beman for beman::tooling)'
         type: string
         required: true
       include_header:
@@ -40,8 +41,20 @@ jobs:
 
     - name: Get Library Name
       id: get-lib-name
+      shell: bash
       run: |
-        PROJECT_NAME=$(cat build/.cmake/api/v1/reply/codemodel-v2-*.json | jq -r '.configurations[0].projects[0].name')
+        shopt -s nullglob
+        files=(build/.cmake/api/v1/reply/codemodel-v2-*.json)
+        if [ "${#files[@]}" -eq 0 ]; then
+          echo "No codemodel-v2 reply file under build/.cmake/api/v1/reply" >&2
+          ls -la build/.cmake/api/v1/reply >&2 || true
+          exit 1
+        fi
+        newest="${files[0]}"
+        for f in "${files[@]}"; do
+          [[ "$f" -nt "$newest" ]] && newest="$f"
+        done
+        PROJECT_NAME=$(jq -r '.configurations[0].projects[0].name' "$newest")
         echo "name=${PROJECT_NAME#*.}" >> "$GITHUB_OUTPUT"
 
     - name: Build Library

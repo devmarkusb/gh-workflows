@@ -4,7 +4,10 @@ on:
   workflow_call:
     inputs:
       matrix_config:
-        description: 'JSON specification of tests to run'
+        description: >-
+          Compiler-centric JSON object: each key is a compiler name (e.g. gcc, clangNN, appleclang, msvc).
+          Values are arrays of objects with "versions", each linking to nested "tests" / cxxversions / stdlibs / test strings.
+          Consumer repos must provide devenv/cmake (toolchains, fetch-content-from-lockfile) and Ninja-friendly layout.
         type: string
         required: true
 
@@ -43,10 +46,10 @@ jobs:
                                               "version": version,
                                               "cxxversion": cxxversion,
                                               "stdlib": stdlib,
-                                              "test": stdlib_test
+                                              "test": stdlib_test,
+                                              # null => run on host runner; string => use job container (Docker)
+                                              "image": image,
                                           }
-                                          if image is not None:
-                                              test["image"] = image
                                           output_list.append(test)
           json_string = json.dumps(output_list)
           with open(os.environ['GITHUB_OUTPUT'], 'a') as output_file:
@@ -56,13 +59,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config: ${{ fromJson(needs.configure_test_matrix.outputs.matrix) }}
+        config: ${{ fromJSON(needs.configure_test_matrix.outputs.matrix) }}
     name: "${{ matrix.config.compiler }} ${{ matrix.config.version }} ${{ matrix.config.cxxversion }} ${{ matrix.config.stdlib }} ${{ matrix.config.test }}"
     runs-on: >-
       ${{ (matrix.config.compiler == 'gcc' || startsWith(matrix.config.compiler, 'clang')) && 'ubuntu-latest'
           || (matrix.config.compiler == 'appleclang' && 'macos-latest')
           || (matrix.config.compiler == 'msvc' && 'windows-latest') }}
-    container: ${{ matrix.config.image }}
+    # JSON null for host jobs (appleclang/msvc); non-null string selects the Docker image for gcc/clang.
+    container: ${{ matrix.config.image && matrix.config.image || fromJSON('null') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -79,7 +83,7 @@ jobs:
         run: sudo chmod -R 777 /opt/
       - name: Setup latest CMake and Ninja
         if: matrix.config.compiler == 'msvc' || matrix.config.compiler == 'appleclang'
-        uses: lukka/get-cmake@latest
+        uses: lukka/get-cmake@6c740684eca256565af86fb8b8fdf43dd3f6fbc0 # v4.3.0
       - name: Print installed software
         shell: bash
         run: |
@@ -175,7 +179,7 @@ jobs:
           cat coverage.json
       - name: Upload Coverage Data to Coveralls
         if: steps.vars.outputs.test_type == 'Coverage' && github.event_name != 'schedule'
-        uses: coverallsapp/github-action@main
+        uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2.3.7
         with:
           file: coverage.json
           github-token: ${{ secrets.GITHUB_TOKEN }}
