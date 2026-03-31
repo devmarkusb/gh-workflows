@@ -20,6 +20,12 @@ Pin the callee ref (e.g. `@v1.0.0` or commit SHA) so upstream changes cannot bre
 
 ---
 
+## CI in this repository
+
+On push to `main` and on pull requests, [.github/workflows/ci.yml](.github/workflows/ci.yml) runs [actionlint](https://github.com/rhysd/actionlint) and [zizmor](https://github.com/zizmorcore/zizmor) (with [.github/zizmor.yml](.github/zizmor.yml)) on these workflow files. For the same checks locally, install [pre-commit](https://pre-commit.com) and run `pre-commit run --all-files` (see [.pre-commit-config.yaml](.pre-commit-config.yaml)).
+
+---
+
 ## Workflows
 
 ### `build-and-test.yml`
@@ -55,7 +61,7 @@ Pin the callee ref (e.g. `@v1.0.0` or commit SHA) so upstream changes cannot bre
 |-----------------|----------|-------------|
 | `matrix_config` | yes      | JSON **array** of `{ "preset": "...", "runner": "..." }` and/or `{ "preset": "...", "image": "..." }`. |
 
-**Windows / MSVC:** Set `"runner": "windows-latest"` (or another `windows-*` hosted runner). MSVC setup is enabled only when `runner` starts with `windows`. Relying on `image` alone while `runner` defaults to Linux will skip MSVC setup and misconfigure the job.
+**Windows / MSVC:** Set `"runner": "windows-latest"` (or another `windows-*` hosted runner). Relying on `image` alone while `runner` defaults to Linux will skip MSVC setup and misconfigure the job.
 
 **CMake preset:** Uses `cmake --workflow --preset <name>`; the consumer repo must define matching presets (e.g. in `CMakePresets.json`).
 

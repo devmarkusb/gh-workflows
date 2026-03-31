@@ -34,10 +34,12 @@ jobs:
       with:
         submodules: 'recursive'
     - name: Configure CMake (Library)
+      env:
+        CXX_STANDARD: ${{ inputs.cxx_standard }}
       run:  |
         mkdir -p build/.cmake/api/v1/query
         touch build/.cmake/api/v1/query/codemodel-v2
-        cmake -B build -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=./devenv/cmake/fetch-content-from-lockfile.cmake -DCMAKE_CXX_STANDARD=${{ inputs.cxx_standard }} -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist
+        cmake -B build -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=./devenv/cmake/fetch-content-from-lockfile.cmake -DCMAKE_CXX_STANDARD="${CXX_STANDARD}" -DCMAKE_INSTALL_PREFIX="$GITHUB_WORKSPACE/dist"
 
     - name: Get Library Name
       id: get-lib-name
@@ -64,26 +66,32 @@ jobs:
       run: cmake --install build
 
     - name: Verify Installation (Consumer Test)
+      env:
+        NAMESPACE: ${{ inputs.namespace }}
+        INCLUDE_HEADER: ${{ inputs.include_header }}
+        MAIN_HEADER: ${{ inputs.main_header }}
+        CXX_STANDARD: ${{ inputs.cxx_standard }}
+        LIB_NAME: ${{ steps.get-lib-name.outputs.name }}
       run: |
         mkdir consumer && cd consumer
         cat <<EOF > CMakeLists.txt
         cmake_minimum_required(VERSION 3.28)
         project(ConsumerTest LANGUAGES CXX)
 
-        find_package(${{ inputs.namespace }}.${{ steps.get-lib-name.outputs.name }} REQUIRED)
+        find_package(${NAMESPACE}.${LIB_NAME} REQUIRED)
 
         add_executable(app main.cpp)
 
-        target_link_libraries(app PRIVATE ${{ inputs.namespace }}::${{ steps.get-lib-name.outputs.name }})
+        target_link_libraries(app PRIVATE ${NAMESPACE}::${LIB_NAME})
         EOF
 
-        include_header=${{ inputs.include_header }}
+        include_header=${INCLUDE_HEADER}
         if [[ -z "$include_header" ]] ; then
-          main_header=${{ inputs.main_header }}
+          main_header=${MAIN_HEADER}
           if [[ -z "$main_header" ]] ; then
-            main_header="${{ steps.get-lib-name.outputs.name }}.hpp"
+            main_header="${LIB_NAME}.hpp"
           fi
-          include_header="${{ inputs.namespace }}/${{ steps.get-lib-name.outputs.name }}/${main_header}"
+          include_header="${NAMESPACE}/${LIB_NAME}/${main_header}"
         fi
 
         cat <<EOF > main.cpp
@@ -92,9 +100,9 @@ jobs:
         int main() {
             return 0;
         }
-    
+
         EOF
 
-        cmake -B build -DCMAKE_CXX_STANDARD=${{ inputs.cxx_standard }} -DCMAKE_PREFIX_PATH=$GITHUB_WORKSPACE/dist
+        cmake -B build -DCMAKE_CXX_STANDARD="${CXX_STANDARD}" -DCMAKE_PREFIX_PATH="${GITHUB_WORKSPACE}/dist"
 
         cmake --build build

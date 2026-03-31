@@ -1,0 +1,25 @@
+# See https://pre-commit.com
+ci:
+  autoupdate_schedule: quarterly
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+      - id: actionlint
+
+  - repo: local
+    hooks:
+      - id: zizmor
+        name: zizmor
+        language: python
+        additional_dependencies: [zizmor==1.23.1]
+        entry: zizmor
+        args: [--min-severity, high]
+        files: ^\.github/workflows/.*\.ya?ml$
