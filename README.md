@@ -1,5 +1,8 @@
 # gh-workflows
 
+[![CI](https://github.com/devmarkusb/gh-workflows/actions/workflows/ci.yml/badge.svg)](https://github.com/devmarkusb/gh-workflows/actions/workflows/ci.yml)
+[![License: BSL-1.0](https://img.shields.io/badge/License-BSL--1.0-blue.svg)](./LICENSE)
+
 Reusable [GitHub Actions](https://docs.github.com/en/actions/using-workflows/reusing-workflow-configuration) workflows for C++ CMake projects that follow a **beman**-similar layout (`devenv/cmake/…`, FetchContent lockfile, optional `namespace::component` install tests).
 Cf. <https://github.com/devmarkusb/devenv>.
 
