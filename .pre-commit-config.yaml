@@ -21,5 +21,5 @@ repos:
         language: python
         additional_dependencies: [zizmor==1.23.1]
         entry: zizmor
-        args: [--min-severity, high]
+        args: [--min-severity, high, --offline, --config, .github/zizmor.yml]
         files: ^\.github/workflows/.*\.ya?ml$
