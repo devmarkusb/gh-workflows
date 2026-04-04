@@ -23,7 +23,7 @@ jobs:
     runs-on: ${{ matrix.presets.runner || 'ubuntu-latest' }}
     container: ${{ matrix.presets.image }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: 'recursive'
       - name: Setup build environment
