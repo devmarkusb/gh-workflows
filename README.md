@@ -1,3 +1,9 @@
+> [!WARNING]
+> **Deprecated.** The workflows in this repository have been moved to
+> [devmarkusb/devenv](https://github.com/devmarkusb/devenv) and are maintained there going forward.
+> Please update your workflow references:
+> `devmarkusb/gh-workflows/.github/workflows/...` → `devmarkusb/devenv/.github/workflows/...`
+
 # gh-workflows
 
 [![CI](https://github.com/devmarkusb/gh-workflows/actions/workflows/ci.yml/badge.svg)](https://github.com/devmarkusb/gh-workflows/actions/workflows/ci.yml)
